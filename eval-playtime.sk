@@ -1,0 +1,24 @@
+function evalPlaytime(p: player):
+  set {_pu} to {_p}'s uuid
+  set {_s} to {server::player::%{_pu}%::playtime::unixMaster} # seconds of playtime
+
+  set {_h} to {_s}/3600 # set {_h} to the hours of playtime
+
+  set {_h} to floor({_h}) # round it down to an integer of hours
+
+  # YOU HAVE PLAYED FOR {_h} HOURS
+
+  loop {_h} times:
+    set {_m} to {_s}-3600 # now we have it set to their playtime seconds without hours
+  
+  set {_m} to {_m}/60 # now how many minutes of playtime without hours
+
+  set {_m} to floor({_m}) # round it down to an integer of hours
+
+  # YOU HAVE PLAYED FOR {_h} HOURS AND {_m} MINUTES
+
+  set {_ss} to size of {server::player::%{_pu}%::sessions::*} # HOW MANY sessions
+
+  # YOU HAVE PLAYED FOR {_h} HOURS AND {_m} MINUTES ACROSS {_ss} SESSIONS.
+
+  return "&c%{_h}% &7hours, &c%{_m}% &7minutes across &c%{_ss}% &7sessions."
