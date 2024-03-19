@@ -1,0 +1,42 @@
+on join:
+  
+  # SETTING SESSION ID
+  set {_ssid} to text from "https://domain.com/api/gen-pre.php" # SOMETHING LIKE ABC=-ABCDEF
+  set {_joinNum} to size of {server::player::%player's uuid%::sessions::*} # SOMETHING LIKE 122
+  add 1 to {_joinNum} # SOMETHING LIKE 123
+  replace "=" in {_ssid} with {_joinNum} # MAKES IT BECOME SOMETHING LIKE ABC123-ABCDEF (THEIR SESSION ID)
+
+  add {_ssid} to {server::player::%player's uuid%::sessions::*}
+  set {server::player::%player's uuid%::sessions::current} to {_ssid}
+
+  # SSID HAS BEEN SET, {_ssid}
+
+  # SETTING JOIN TIME
+
+  set {_now} to unix timestamp of now
+  set {server::player::%player's uuid%::sessions::%{_ssid}%} to {_now}
+
+  # SEND IT TO DISCORD
+
+  discordSend("**Player:** ``%player%`` | **Session ID:** ``%{_ssid}%`` | **Join:** ``%{_now}%``", {config::discord::playtime}, "false")
+
+
+  # SETS THEIR SESSION ID
+  # ADDS IT TO THEIR sessions
+  # SETS IT TO THEIR CURRENT SESSION
+  # SENDS IT TO DISCORD PLAYTIME CHANNEL
+
+
+on quit:
+
+  # get session ID
+  set {_ssid} to {server::player::%player's uuid%::sessions::current}
+
+  # get now
+  set {_now} to unix timestamp of now
+
+  # get session runtime
+  set {_runtime} to difference between {_now} and {server::player::%player's uuid%::sessions::%{_ssid}%}
+
+  # append it to their entire playtime
+  add {_runtime} to {server::player::%player's uuid%::playtime::unixMaster}
